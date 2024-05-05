@@ -1,0 +1,13 @@
+<div nz-flex>
+    <div class="flex-item"><app-room-list></app-room-list></div>
+    <div class="flex-item">
+        <nz-list nzBordered nzHeader="Upcoming meetings" nzFooter="Footer">
+            @for (item of (meetings$ | async); track item) {
+            <nz-list-item>
+                <span nz-typography><mark>[{{item.date | dateTimeFormat}}]</mark></span>
+                {{ item.title }}
+            </nz-list-item>
+            }
+        </nz-list>
+    </div>
+</div>

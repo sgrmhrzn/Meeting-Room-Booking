@@ -1,0 +1,15 @@
+<nz-calendar>
+    <ul *nzDateCell="let date" class="events">
+
+        @switch (dateFormat.transform(date, 'YYYY-MM-DD')) {
+        @case ('2024-05-03') {
+        @for (item of cs.meetings; track $index) {
+        <li>
+            <a [routerLink]="['/meeting/',item.id]">{{item.title}}</a>
+            <nz-badge [nzStatus]="'default'" [nzText]="item.title"></nz-badge>
+        </li>
+        }
+        }
+        }
+    </ul>
+</nz-calendar>

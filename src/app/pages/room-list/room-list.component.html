@@ -1,0 +1,13 @@
+<h3>Rooms</h3>
+<div nz-row [nzGutter]="8">
+    <div nz-col [nzSpan]="4" *ngFor="let room of rooms">
+        <nz-card [nzTitle]="room.title">
+            <p><span nz-icon nzType="team" nzTheme="outline"></span>{{room.capacity}}</p>
+            <p>Amenities <br />
+                <span nz-icon nzType="sound" *ngIf="room.amenities?.speaker" nzTheme="outline"></span>
+                <span nz-icon nzType="wifi" *ngIf="room.amenities?.wifi" nzTheme="outline"></span>
+                <span nz-icon nzType="video-camera" *ngIf="room.amenities?.projector" nzTheme="outline"></span>
+            </p>
+        </nz-card>
+    </div>
+</div>

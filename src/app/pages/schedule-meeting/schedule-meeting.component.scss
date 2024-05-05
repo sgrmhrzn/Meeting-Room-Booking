@@ -1,0 +1,15 @@
+.flex-item {
+    width: 50%;
+}
+
+.meeting {
+    height: 400px;
+
+    &__detail-block {
+        margin: auto;
+    }
+}
+
+.steps-action {
+    float: right;
+}
