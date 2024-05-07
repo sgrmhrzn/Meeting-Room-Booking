@@ -10,7 +10,7 @@ export const selectMeetingById = (id: string) =>
     createSelector(selectMeetings, meetings => meetings.find(meeting => meeting.id === id) as MeetingModel);
 
 export const selectRecentTen = () =>
-    createSelector(selectMeetings, meetings => { const ordered = _.orderBy(meetings, ['date'], ['desc']); return _.take(ordered, 10) as MeetingModel[] });
+    createSelector(selectMeetings, meetings => { const ordered = _.orderBy(meetings, ['date'], ['asc']); return _.take(ordered, 10) as MeetingModel[] });
 
 export const selectRooms = (state: GlobalState) => state.global.rooms;
 
