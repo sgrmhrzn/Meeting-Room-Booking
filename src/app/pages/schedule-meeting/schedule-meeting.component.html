@@ -68,7 +68,7 @@
                                 <nz-form-label nzRequired nzFor="description">Selected meeting room</nz-form-label>
                                 <nz-form-control nzErrorTip="Please select meeting room!">
                                     <nz-radio-group nzButtonStyle="solid" [nzDisabled]="true">
-                                        <label nz-radio-button [nzValue]="(room$ | async)?.id" [style.height]="'auto'">
+                                        <label nz-radio-button [nzValue]="(room$ | async)?.id" [style.height]="'auto'" [style.width]="'100px'">
                                             {{(room$ | async)?.title}} <br />
                                             <span nz-icon nzType="team" nzTheme="outline"></span>
                                             {{(room$ | async)?.capacity}}<br />
@@ -92,13 +92,13 @@
 
                                     <nz-radio-group formControlName="id" nzButtonStyle="solid">
                                         @if(rooms$ | async | meetingDateValidate:[timeForm.value.startTime, timeForm.value.date]; as data){
-                                        <label nz-radio-button [nzValue]="room.id" [style.height]="'auto'"
+                                        <label nz-radio-button [nzValue]="room.id" [style.height]="'auto'" [style.width]="'100px'"
                                             *ngFor="let room of data">
                                             {{room.title}} <br />
                                             <span nz-icon nzType="team" nzTheme="outline"></span>
                                             {{room.capacity}}<br />
                                             <!-- Amenities :  -->
-                                            <span *ngFor="let a of room.amenities" nz-icon
+                                            <span class="amenity" *ngFor="let a of room.amenities" nz-icon
                                                 [nzType]="a === 'sound'?'sound':a === 'wifi'?'wifi':'video-camera'"
                                                 nzTheme="outline"></span>
                                             <!-- Amenities : {{room.amenities}} -->

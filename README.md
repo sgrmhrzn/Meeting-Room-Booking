@@ -28,3 +28,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Snapshot
 ![alt text](https://github.com/sgrmhrzn/Meeting-Room-Booking/blob/main/src/assets/image.jpg)
+![alt text](https://github.com/sgrmhrzn/Meeting-Room-Booking/blob/main/src/assets/image2.jpg)
+![alt text](https://github.com/sgrmhrzn/Meeting-Room-Booking/blob/main/src/assets/image6.jpg)
+![alt text](https://github.com/sgrmhrzn/Meeting-Room-Booking/blob/main/src/assets/image4.jpg)
+![alt text](https://github.com/sgrmhrzn/Meeting-Room-Booking/blob/main/src/assets/image5.jpg)
