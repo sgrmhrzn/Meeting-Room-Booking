@@ -1,15 +1,17 @@
 .flex-item {
-    width: 50%;
+    width: 60%;
 }
 
 .meeting {
     height: 400px;
 
     &__detail-block {
-        margin: auto;
+        margin-top: 1rem;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
 .steps-action {
-    float: right;
+    // float: right;
 }

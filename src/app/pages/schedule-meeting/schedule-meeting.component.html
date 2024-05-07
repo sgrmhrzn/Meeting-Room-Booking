@@ -1,116 +1,203 @@
-<section>
-    <h1>Schedule a meeting</h1>
-    <div>
-        <!-- <div *ngFor="let room of rooms">
-            {{room.title}}
-            {{room.capacity}}
-        </div> -->
-        <nz-steps nzType="navigation" [nzCurrent]="current" (nzIndexChange)="onIndexChange($event)">
-            <nz-step nzTitle="Date & time" [nzStatus]="getStatus(0)"></nz-step>
-            <nz-step nzTitle="Room selection" [nzStatus]="getStatus(1)"></nz-step>
-            <nz-step nzTitle="Detail" [nzStatus]="getStatus(2)"></nz-step>
-            <nz-step nzTitle="Summary" [nzStatus]="getStatus(3)"></nz-step>
-        </nz-steps>
+<button *ngIf="!isEdit" nz-button [nzType]="'primary'" (click)="showModal()"><span>Schedule a meeting</span></button>
+<button *ngIf="isEdit" nz-button [nzType]="'primary'" (click)="showModal()"><span><span nz-icon nzType="edit"
+            nzTheme="outline"></span></span></button>
+<nz-modal [nzWidth]="900" [(nzVisible)]="isVisible" [nzTitle]="header" [nzFooter]="footer" [nzClosable]="false"
+    (nzOnCancel)="handleCancel">
+    <ng-container *nzModalContent>
+        <section>
+            <nz-steps *ngIf="current !== 4" nzType="navigation" [nzCurrent]="current" (nzIndexChange)="next($event)">
+                <nz-step nzTitle="Date & time" [nzStatus]="getStatus(0)"></nz-step>
+                <nz-step nzTitle="Room selection" [nzStatus]="getStatus(1)"
+                    [nzDisabled]="getStatus(1) === 'wait'"></nz-step>
+                <nz-step nzTitle="Detail" [nzStatus]="getStatus(2)" [nzDisabled]="getStatus(2) === 'wait'"></nz-step>
+                <nz-step nzTitle="Summary" [nzStatus]="getStatus(3)" [nzDisabled]="getStatus(3) === 'wait'"></nz-step>
+            </nz-steps>
 
-        <div nz-flex [nzVertical]="false" class="meeting steps-content">
-            <div class="flex-item meeting__detail-block" [ngSwitch]="current">
-                <ng-container *ngSwitchCase="0">
-                    <nz-calendar nzFullscreen="false" [(ngModel)]="selectedDate"
-                        (nzSelectChange)="selectChange($event)"></nz-calendar>
-                    <form nz-form [formGroup]="timeForm" [nzLayout]="'inline'">
-                        <nz-form-item>
-                            <nz-form-label nzRequired nzFor="email">Start time</nz-form-label>
-                            <nz-form-control nzErrorTip="Please input meeting start time!">
-                                <!-- <nz-input-group nzPrefixIcon="user"> -->
-                                <nz-time-picker [nzUse12Hours]="true" nzFormat="h:mm a" nz-input
-                                    formControlName="startTime"></nz-time-picker>
-                                <!-- </nz-input-group> -->
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-label nzRequired nzFor="email">End time</nz-form-label>
+            <div nz-flex [nzVertical]="false" class="meeting steps-content" [nzAlign]="'center'">
+                <div class="flex-item meeting__detail-block" [ngSwitch]="current">
+                    <ng-container *ngSwitchCase="0">
+                        <!-- <nz-calendar nzFullscreen="false" [(ngModel)]="selectedDate"
+                        (nzSelectChange)="selectChange($event)"></nz-calendar> -->
+                        <form nz-form [formGroup]="timeForm" [nzLayout]="'vertical'">
+                            <div nz-flex>
 
-                            <nz-form-control nzErrorTip="Please input meeting end time!">
-                                <!-- <nz-input-group nzPrefixIcon="user"> -->
-                                <nz-time-picker [nzUse12Hours]="true" nzFormat="h:mm a" nz-input
-                                    formControlName="endTime"></nz-time-picker>
-                                <!-- </nz-input-group> -->
-                            </nz-form-control>
-                        </nz-form-item>
-                    </form>
-                </ng-container>
-                <ng-container *ngSwitchCase="1">
-                    Available meeting rooms
-                    <form nz-form [formGroup]="roomForm">
-                        <nz-radio-group  formControlName="id" nzButtonStyle="solid">
-                            <label nz-radio-button [nzValue]="room.id" [style.height]="'auto'" *ngFor="let room of rooms">
-                                {{room.title}} <br />
-                                <span nz-icon nzType="team" nzTheme="outline"></span> {{room.capacity}}<br />
-                                <!-- Amenities :  -->
-                                <span nz-icon nzType="sound" nzTheme="outline"></span>
-                                <span nz-icon nzType="wifi" nzTheme="outline"></span>
-                                <span nz-icon nzType="video-camera" nzTheme="outline"></span>
-                                <!-- Amenities : {{room.amenities}} -->
-                            </label>
-                        </nz-radio-group>
-                    </form>
-                </ng-container>
-                <ng-container *ngSwitchCase="2">
-                    <form nz-form [formGroup]="validateForm" nzLayout="vertical" class="login-form" (ngSubmit)="submitForm()">
-                        <nz-form-item>
-                            <nz-form-label nzRequired nzFor="title">Title</nz-form-label>
-                            <nz-form-control nzErrorTip="Please input meeting title!">
-                                <nz-input-group nzPrefixIcon="user">
-                                    <input type="text" nz-input formControlName="title" placeholder="Title" />
-                                </nz-input-group>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-label nzRequired nzFor="attendees">Attendees</nz-form-label>
-                            <nz-form-control nzErrorTip="Please input meeting attendees!">
-                                <nz-input-group nzPrefixIcon="lock">
-                                    <input type="text" nz-input formControlName="attendees" placeholder="Attendees" />
-                                </nz-input-group>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-label nzRequired nzFor="description">Description</nz-form-label>
-                            <nz-form-control nzErrorTip="Please input meeting description!">
-                                <nz-input-group nzPrefixIcon="lock">
-                                    <textarea type="text" nz-input formControlName="description"
-                                        placeholder="Description"></textarea>
-                                </nz-input-group>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </form>
-                </ng-container>
-                <ng-container *ngSwitchCase="3">
-                    <nz-descriptions nzTitle="Meeting summary" nzLayout="horizontal" [nzColumn]="1">
-                        <nz-descriptions-item nzTitle="Date">{{timeForm.value.date |
-                            dateTimeFormat}}</nz-descriptions-item>
-                        <nz-descriptions-item nzTitle="Time">{{timeForm.value.startTime | dateTimeFormat:'time'}} -
-                            {{timeForm.value.endTime | dateTimeFormat:'time'}}</nz-descriptions-item>
-                        <nz-descriptions-item nzTitle="Room">{{selectedRoom.title}}</nz-descriptions-item>
-                        <nz-descriptions-item nzTitle="Title">{{validateForm.value.title}}</nz-descriptions-item>
-                        <nz-descriptions-item
-                            nzTitle="Attendees">{{validateForm.value.attendees}}</nz-descriptions-item>
-                        <nz-descriptions-item
-                            nzTitle="Description">{{validateForm.value.description}}</nz-descriptions-item>
-                    </nz-descriptions>
-                </ng-container>
+                                <nz-form-item>
+                                    <nz-form-label nzRequired nzFor="email">Date</nz-form-label>
+                                    <nz-date-picker nzInline formControlName="date"
+                                        [nzDisabledDate]="disableDates"></nz-date-picker>
+                                </nz-form-item>
+                                <div style="width: 200px;">
+                                    <nz-form-item>
+                                        <nz-form-label nzRequired nzFor="email">Start time</nz-form-label>
+                                        <nz-form-control nzErrorTip="Please input meeting start time!">
+                                            <!-- <nz-input-group nzPrefixIcon="user"> -->
+                                            <nz-time-picker [nzDisabledHours]="disabledStartHours()" nzFormat="HH:mm"
+                                                nz-input formControlName="startTime" (blur)="onChange($event)"
+                                                (nzOpenChange)="onChange($event)"></nz-time-picker>
+                                            <!-- </nz-input-group> -->
+                                        </nz-form-control>
+                                    </nz-form-item>
+                                    <nz-form-item>
+                                        <nz-form-label nzRequired nzFor="email">End time</nz-form-label>
+
+                                        <nz-form-control [nzErrorTip]="errorMsg">
+                                            <!-- <nz-input-group nzPrefixIcon="user"> -->
+                                            <nz-time-picker nzFormat="HH:mm" nz-input formControlName="endTime"
+                                                [nzDisabledHours]="disabledEndHours()"></nz-time-picker>
+                                            <!-- </nz-input-group> -->
+                                        </nz-form-control>
+                                        <ng-template #errorMsg>
+                                            @if(timeForm.controls.endTime.hasError('required')){
+                                            <label>Please input meeting end time!</label>
+                                            }@else if (timeForm.controls.endTime.hasError('invalidTime')) {
+                                            <small>End time cannot be before start time & must be 15 mins greater than
+                                                start time!</small>
+                                            }
+                                        </ng-template>
+                                    </nz-form-item>
+                                </div>
+                            </div>
+                        </form>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="1">
+                        <!-- Available meeting rooms -->
+                        @if(isEdit){
+                        <form nz-form nzLayout="vertical">
+
+                            <nz-form-item>
+                                <nz-form-label nzRequired nzFor="description">Selected meeting room</nz-form-label>
+                                <nz-form-control nzErrorTip="Please select meeting room!">
+                                    <nz-radio-group nzButtonStyle="solid" [nzDisabled]="true">
+                                        <label nz-radio-button [nzValue]="(room$ | async)?.id" [style.height]="'auto'">
+                                            {{(room$ | async)?.title}} <br />
+                                            <span nz-icon nzType="team" nzTheme="outline"></span>
+                                            {{(room$ | async)?.capacity}}<br />
+                                            <!-- Amenities :  -->
+                                            <span class="amenity" *ngFor="let a of (room$ | async)?.amenities" nz-icon
+                                                [nzType]="a === 'sound'?'sound':a === 'wifi'?'wifi':'video-camera'"
+                                                nzTheme="outline"></span>
+                                            <!-- Amenities : {{room.amenities}} -->
+                                        </label>
+                                    </nz-radio-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </form>
+
+                        }
+                        <form nz-form [formGroup]="roomForm" nzLayout="vertical">
+                            <nz-form-item>
+                                <nz-form-label nzRequired nzFor="description">Available meeting
+                                    rooms</nz-form-label>
+                                <nz-form-control nzErrorTip="Please select meeting room!">
+
+                                    <nz-radio-group formControlName="id" nzButtonStyle="solid">
+                                        @if(rooms$ | async | meetingDateValidate:[timeForm.value.startTime, timeForm.value.date]; as data){
+                                        <label nz-radio-button [nzValue]="room.id" [style.height]="'auto'"
+                                            *ngFor="let room of data">
+                                            {{room.title}} <br />
+                                            <span nz-icon nzType="team" nzTheme="outline"></span>
+                                            {{room.capacity}}<br />
+                                            <!-- Amenities :  -->
+                                            <span *ngFor="let a of room.amenities" nz-icon
+                                                [nzType]="a === 'sound'?'sound':a === 'wifi'?'wifi':'video-camera'"
+                                                nzTheme="outline"></span>
+                                            <!-- Amenities : {{room.amenities}} -->
+                                        </label>
+                                        <nz-empty *ngIf="!data.length" nzNotFoundImage="simple"></nz-empty>
+                                        }
+                                    </nz-radio-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </form>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="2">
+                        <form nz-form [formGroup]="meetingDetailForm" nzLayout="vertical" class="login-form">
+                            <nz-form-item>
+                                <nz-form-label nzRequired nzFor="title">Title</nz-form-label>
+                                <nz-form-control nzErrorTip="Please input meeting title!">
+                                    <nz-input-group nzPrefixIcon="bold">
+                                        <input type="text" nz-input formControlName="title" placeholder="Title" />
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label nzRequired nzFor="attendees">Attendees</nz-form-label>
+                                <nz-form-control nzErrorTip="Please input meeting attendees!">
+                                    <nz-input-group nzPrefixIcon="team">
+                                        <input type="number" nz-input formControlName="attendees"
+                                            placeholder="Attendees" />
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                            <nz-form-item>
+                                <nz-form-label nzRequired nzFor="description">Description</nz-form-label>
+                                <nz-form-control nzErrorTip="Please input meeting description!">
+                                    <nz-input-group nzPrefixIcon="info">
+                                        <textarea type="text" nz-input formControlName="description"
+                                            placeholder="Description"></textarea>
+                                    </nz-input-group>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </form>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="3">
+                        <nz-descriptions nzTitle="Meeting summary" nzLayout="horizontal" [nzColumn]="1">
+                            <nz-descriptions-item nzTitle="Date">{{timeForm.value.date |
+                                dateTimeFormat}}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Time">{{timeForm.value.startTime |
+                                dateTimeFormat:'time'}} -
+                                {{timeForm.value.endTime | dateTimeFormat:'time'}}</nz-descriptions-item>
+                            <nz-descriptions-item nzTitle="Room">{{(room$ |async).title}}</nz-descriptions-item>
+                            <nz-descriptions-item
+                                nzTitle="Title">{{meetingDetailForm.value.title}}</nz-descriptions-item>
+                            <nz-descriptions-item
+                                nzTitle="Attendees">{{meetingDetailForm.value.attendees}}</nz-descriptions-item>
+                            <nz-descriptions-item
+                                nzTitle="Description">{{meetingDetailForm.value.description}}</nz-descriptions-item>
+                        </nz-descriptions>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="4">
+                        <nz-result nzStatus="success" [nzTitle]="isEdit?'Successfully updated!':'Successfully booked!'"
+                            [nzSubTitle]="'Meeting '+(isEdit?'updated':'booked')+ ' for ' + (timeForm.value.date | dateTimeFormat)">
+                            <div nz-result-extra>
+                                <button nz-button nzType="primary" (click)="handleOk()">Dismiss</button>
+                                <!-- <button nz-button>Buy Again</button> -->
+                            </div>
+                        </nz-result>
+                    </ng-container>
+                </div>
             </div>
-        </div>
-        <div class="steps-action">
-            <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
-                <span>Previous</span>
-            </button>
-            <button nz-button nzType="default" (click)="next()" *ngIf="current < 3">
-                <span>Next</span>
-            </button>
-            <button nz-button nzType="primary" (click)="done()" *ngIf="current === 3">
-                <span>Confirm</span>
-            </button>
-        </div>
 
+        </section>
+    </ng-container>
+</nz-modal>
+
+<ng-template #footer>
+
+    <div class="steps-action" *ngIf="current !== 4">
+        <button nz-button nzType="primary" nzDanger>
+            <a nz-popconfirm nzPopconfirmTitle="Are you sure want to cancel?" nzPopconfirmPlacement="bottom"
+                (nzOnConfirm)="handleOk()" (nzOnCancel)="cancel()">
+                Cancel
+            </a></button>
+        <button nz-button nzType="default" (click)="pre()" *ngIf="current > 0">
+            <span>Previous</span>
+        </button>
+        <button nz-button nzType="default" (click)="next(current + 1)" *ngIf="current < 3">
+            <span>Next</span>
+        </button>
+        <button nz-button nzType="primary" (click)="done()" *ngIf="current === 3">
+            <span>Confirm</span>
+        </button>
     </div>
-</section>
+</ng-template>
+
+<ng-template #header>
+    <div nz-flex [nzJustify]="'space-between'">
+        {{isEdit?'Update a meeting':'Schedule a meeting'}}
+        <a nz-popconfirm nzPopconfirmTitle="Are you sure want to cancel?" nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="handleOk()" (nzOnCancel)="cancel()">
+            <span nz-icon nzType="close" nzTheme="outline"></span>
+        </a>
+    </div>
+</ng-template>

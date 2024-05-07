@@ -1,15 +1,74 @@
+<app-schedule-meeting></app-schedule-meeting>
 <nz-calendar>
     <ul *nzDateCell="let date" class="events">
 
+        @for (item of meetings$ | async; track $index) {
         @switch (dateFormat.transform(date, 'YYYY-MM-DD')) {
-        @case ('2024-05-03') {
-        @for (item of cs.meetings; track $index) {
-        <li>
-            <a [routerLink]="['/meeting/',item.id]">{{item.title}}</a>
-            <nz-badge [nzStatus]="'default'" [nzText]="item.title"></nz-badge>
-        </li>
+        @case (dateFormat.transform(item.date, 'YYYY-MM-DD')){
+        <!-- <li> -->
+        <div>
+            <a (click)="showModal(item)" nz-tooltip
+                [nzTooltipTitle]="(item.startTime | dateTimeFormat:'time') + ' to ' + (item.endTime | dateTimeFormat:'time')">
+                <!-- {{item.title}} -->
+                <nz-badge [nzStatus]="'success'" [nzText]="item.title">
+                </nz-badge>
+            </a>
+        </div>
+        <!-- </li> -->
         }
         }
         }
     </ul>
 </nz-calendar>
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="header" [nzClosable]="false" [nzFooter]="footer"
+    (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+        <div class="meeting__view">
+            <div><strong>Title</strong>
+                <br />{{this.selectedMeeting?.title}}
+            </div>
+            <div><strong>Date</strong>
+                <br />{{this.selectedMeeting?.date| dateTimeFormat}}
+            </div>
+            <div><strong>From</strong>
+                <br />{{this.selectedMeeting?.startTime | dateTimeFormat:'time'}}
+            </div>
+            <div><strong>To</strong>
+                <br />{{this.selectedMeeting?.endTime| dateTimeFormat:'time'}}
+            </div>
+            <div><strong>Room</strong>
+                <br />{{(room$ | async)?.title}}
+            </div>
+            <div><strong>Attendees</strong>
+                <br />{{this.selectedMeeting?.attendees}}
+            </div>
+            <div><strong>Description</strong>
+                <br />{{this.selectedMeeting?.description}}
+            </div>
+        </div>
+    </ng-container>
+
+
+</nz-modal>
+<ng-template #header>
+    <div nz-flex [nzJustify]="'space-between'">
+        {{this.selectedMeeting?.title}}
+        <a (click)="cancel()">
+            <span nz-icon nzType="close" nzTheme="outline"></span>
+        </a>
+    </div>
+</ng-template>
+<ng-template #footer>
+    <button nz-button nzType="primary" nzDanger>
+        <a nz-popconfirm nzPopconfirmTitle="Are you sure want to delete?" nzPopconfirmPlacement="bottom"
+            (nzOnConfirm)="handleDelete()" (nzOnCancel)="cancel()">
+            <span nz-icon nzType="delete" nzTheme="outline"></span>
+        </a>
+    </button>
+    <span [style.padding]="'4px'">
+        <app-schedule-meeting [isEdit]="true" [meetingId]="selectedMeeting?.id"></app-schedule-meeting>
+    </span>
+    <button nz-button nzType="primary" (click)="handleOk()">
+        <span><span nz-icon nzType="check" nzTheme="outline"></span></span>
+    </button>
+</ng-template>

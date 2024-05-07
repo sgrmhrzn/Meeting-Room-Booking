@@ -78,3 +78,10 @@ nz-content {
   background: #fff;
   height: 100%;
 }
+
+.link{
+  color: inherit;
+  &:hover{
+    color: inherit;
+  }
+}

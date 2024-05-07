@@ -1,13 +1,22 @@
 <div nz-flex>
     <div class="flex-item"><app-room-list></app-room-list></div>
-    <div class="flex-item">
-        <nz-list nzBordered nzHeader="Upcoming meetings" nzFooter="Footer">
-            @for (item of (meetings$ | async); track item) {
+    <div class="flex-item upcoming">
+        <nz-list nzBordered [nzHeader]="header" [nzFooter]="footer">
+            @if(meetings$ | async; as data){
+            @for (item of data; track item) {
             <nz-list-item>
                 <span nz-typography><mark>[{{item.date | dateTimeFormat}}]</mark></span>
                 {{ item.title }}
             </nz-list-item>
             }
+            <nz-empty *ngIf="!data.length" nzNotFoundImage="simple"></nz-empty>
+            }
         </nz-list>
     </div>
+    <ng-template #header>
+        <h3>Upcoming meetings</h3>
+    </ng-template>
+    <ng-template #footer>
+        <a [routerLink]="['/meeting/calendar']">Go to calendar</a>
+    </ng-template>
 </div>

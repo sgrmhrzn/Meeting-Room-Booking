@@ -1,13 +1,48 @@
 <h3>Rooms</h3>
-<div nz-row [nzGutter]="8">
-    <div nz-col [nzSpan]="4" *ngFor="let room of rooms">
-        <nz-card [nzTitle]="room.title">
-            <p><span nz-icon nzType="team" nzTheme="outline"></span>{{room.capacity}}</p>
-            <p>Amenities <br />
-                <span nz-icon nzType="sound" *ngIf="room.amenities?.speaker" nzTheme="outline"></span>
-                <span nz-icon nzType="wifi" *ngIf="room.amenities?.wifi" nzTheme="outline"></span>
-                <span nz-icon nzType="video-camera" *ngIf="room.amenities?.projector" nzTheme="outline"></span>
-            </p>
+<div nz-flex >
+
+    <div nz-row [nzGutter]="[10, 10]" class="rooms">
+        @if(rooms$ | async | roomFilter:filterForm.value; as data){
+        <div nz-col [nzSpan]="6" *ngFor="let room of data">
+            <nz-card [nzTitle]="room.title">
+                <p><span nz-icon nzType="team" nzTheme="outline"></span>{{room.capacity}}</p>
+                <p>Amenities <br />
+                    <span class="amenity" *ngFor="let a of room.amenities" nz-icon
+                        [nzType]="a === 'sound'?'sound':a === 'wifi'?'wifi':'video-camera'" nzTheme="outline"></span>
+                </p>
+            </nz-card>
+
+        </div>
+        <nz-empty *ngIf="!data.length" nzNotFoundImage="simple"></nz-empty>
+        }
+    </div>
+    <div class="filter">
+        <nz-card nzTitle="Filter">
+            <form nz-form [formGroup]="filterForm" [nzLayout]="'vertical'">
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="title">Capacity</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input capacity!">
+                        <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select capacity" formControlName="capacity">
+                            <nz-option nzLabel="< 10" nzValue="0"></nz-option>
+                            <nz-option nzLabel="10 - 50" nzValue="1"></nz-option>
+                            <nz-option nzLabel="50 - 100" nzValue="2"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label nzRequired nzFor="title">Amenities</nz-form-label>
+                    <nz-form-control nzErrorTip="Please input an amenities!">
+                        <nz-select [nzMode]="'multiple'" nzShowSearch nzAllowClear nzPlaceHolder="Select an amenities"
+                            formControlName="amenities">
+                            <nz-option *ngFor="let item of listOfOption" [nzLabel]="item" [nzValue]="item"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <button nz-button nzType="primary" (click)="filterForm.reset()">
+                    <span>Clear</span>
+                </button>
+            </form>
         </nz-card>
+        <!-- </nz-list> -->
     </div>
 </div>

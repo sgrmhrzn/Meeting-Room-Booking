@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 export class DateTimeFormatPipe implements PipeTransform {
 
   transform(value: Date | undefined, type: string = ''): string {
-    // console.log(dayjs(value).format(type));
     if (type === 'time') {
       return dayjs(value).format('h:mm A')
     } else if (type) {

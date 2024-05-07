@@ -2,30 +2,20 @@
   <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null">
     <div class="sidebar-logo">
-      <a href="https://ng.ant.design/" target="_blank">
-        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
-        <h1>Ant Design Of Angular</h1>
-      </a>
+      <h1>Book Your Meeting</h1>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <li nz-menu-item nz-tooltip nzTooltipPlacement="right" nzMatchRouter nzIcon="dashboard">
         <span nz-icon nzType="dashboard"></span>
-        <span></span>
-        <a routerLink="/welcome">Dashboard</a>
+        <span>
+          <a class="link" routerLink="/welcome">Dashboard</a>
+        </span>
       </li>
-      <li nz-submenu nzOpen nzTitle="Meeting" nzIcon="schedule">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <span nz-icon nzType="calendar"></span>
-            <span></span>
-            <a routerLink="/meeting/calendar">Calendar</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <span nz-icon nzType="schedule"></span>
-            <span></span>
-            <a routerLink="/meeting/schedule">Schedule a meeting</a>
-          </li>
-        </ul>
+      <li nz-menu-item nz-tooltip nzTooltipPlacement="right" nzMatchRouter>
+        <span nz-icon nzType="calendar"></span>
+        <span>
+          <a class="link" routerLink="/meeting/calendar">Calendar</a>
+        </span>
       </li>
     </ul>
   </nz-sider>
