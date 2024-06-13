@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { RoomListComponent } from '../room-list/room-list.component';
 import { NzFlexModule } from 'ng-zorro-antd/flex';
 import { NzListModule } from 'ng-zorro-antd/list';
@@ -16,7 +16,8 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
   standalone: true,
   imports: [RoomListComponent, NzFlexModule, NzListModule, DateTimeFormatPipe, CommonModule, RouterModule, NzEmptyModule],
   templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.scss']
+  styleUrls: ['./welcome.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class WelcomeComponent implements OnInit {
   meetings$: Observable<any> = this.store.select(selectRecentTen());
